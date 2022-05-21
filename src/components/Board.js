@@ -130,6 +130,8 @@ export default class Board extends React.Component {
                 return ' no-border-bottom ';
             case 8 : 
                 return ' no-border-bottom no-border-right ';
+            default :
+                return '';
         }
     }
 
