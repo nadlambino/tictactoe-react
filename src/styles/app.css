@@ -1,0 +1,81 @@
+.app {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -moz-transform: translateX(-50%) translateY(-50%);
+    -webkit-transform: translateX(-50%) translateY(-50%);
+    transform: translateX(-50%) translateY(-50%);
+}
+
+.board {
+    width: 300px;
+    height: 300px;
+    margin: auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
+}
+
+.tile {
+    border: 1px solid rgb(214, 214, 214);
+    border-radius: 5px;
+    text-align: center;
+    cursor: pointer;
+    margin: 1px;
+}
+
+.tile span {
+    display: block;
+    position: relative;
+    top: 40%;
+    transform: translateY(-50%);
+}
+
+.x-tile {
+    font-size: 50pt;
+    color: rgb(241, 112, 112);
+}
+
+.o-tile {
+    font-size: 50pt;
+    color: rgb(92, 181, 223);
+}
+
+.alert {
+    width: 100%;
+    background-color: rgb(94, 231, 112);
+    text-align: center;
+    padding: 2px;
+    border: 1px solid green;
+    border-radius: 5px;
+    top: -50px;
+    position: absolute;
+}
+
+.hide {
+    display: none !important;
+}
+
+.show {
+    display: block !important;
+}
+
+.controls {
+    width: 100%;
+    background-color: rgb(219, 223, 219);
+    text-align: center;
+    padding: 2px;
+    border: 1px solid rgb(163, 165, 163);
+    border-radius: 5px;
+    bottom: -50px;
+    position: absolute;
+}
+
+.controls button {
+    height: 30px;
+    width: 100px;
+    border: 1px solid rgb(163, 165, 163);
+    border-radius: 5px;
+    padding: 5px;
+    cursor: pointer;
+}
