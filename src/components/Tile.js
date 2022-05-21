@@ -10,7 +10,7 @@ export default function Tile(props) {
     const getValue = () => {
         if (String(props.value) === String(1)) {
             return <VscClose />
-        } else if (String(props.value) == String(-1)) {
+        } else if (String(props.value) === String(-1)) {
             return <VscCircleLargeOutline />
         } else {
             return '';
