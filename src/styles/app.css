@@ -1,3 +1,23 @@
+:root {
+    --blue-color : rgb(92, 181, 223);
+    --red-color : rgb(241, 112, 112);
+    --pink-color-1 : rgb(247, 103, 204);
+    --pink-color-2 : rgb(247, 142, 215);
+}
+
+html, * {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+        'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+        sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
 .app {
     position: absolute;
     top: 50%;
@@ -17,39 +37,67 @@
 }
 
 .tile {
-    border: 1px solid rgb(214, 214, 214);
-    border-radius: 5px;
+    border: 5px solid var(--pink-color-2);
     text-align: center;
     cursor: pointer;
-    margin: 1px;
 }
 
-.tile span {
+.no-border-top {
+    border-top: none;
+}
+
+.no-border-left {
+    border-left: none;
+}
+
+.no-border-right {
+    border-right: none;
+}
+
+.no-border-bottom {
+    border-bottom: none;
+}
+
+.tile div {
     display: block;
     position: relative;
-    top: 40%;
-    transform: translateY(-50%);
+    height: 100%;
+    top: 10%;
 }
 
 .x-tile {
     font-size: 50pt;
-    color: rgb(241, 112, 112);
+    color: var(--red-color);
+}
+
+.x-icon {
+    color: var(--red-color);
+    font-size: 20pt;
+    margin-bottom: -7px;
 }
 
 .o-tile {
-    font-size: 50pt;
-    color: rgb(92, 181, 223);
+    font-size: 43pt;
+    color: var(--blue-color);
+}
+
+.o-icon {
+    color: var(--blue-color);
+    font-size: 20pt;
+    margin-bottom: -5px;
 }
 
 .alert {
     width: 100%;
-    background-color: rgb(94, 231, 112);
+    background-color: rgb(215, 252, 221);
     text-align: center;
-    padding: 2px;
-    border: 1px solid green;
-    border-radius: 5px;
-    top: -50px;
+    padding: 20px;
+    border: 1px solid rgb(123, 202, 123);
+    top: -120px;
     position: absolute;
+    font-weight: bolder;
+    font-family: papyrus;
+    letter-spacing: 2px;
 }
 
 .hide {
@@ -62,20 +110,24 @@
 
 .controls {
     width: 100%;
-    background-color: rgb(219, 223, 219);
     text-align: center;
-    padding: 2px;
-    border: 1px solid rgb(163, 165, 163);
-    border-radius: 5px;
-    bottom: -50px;
+    bottom: -100px;
     position: absolute;
 }
 
 .controls button {
-    height: 30px;
-    width: 100px;
-    border: 1px solid rgb(163, 165, 163);
-    border-radius: 5px;
-    padding: 5px;
+    height: 50px;
+    width: 100%;
+    letter-spacing: 2px;
+    border: 1px solid rgb(243, 9, 173);
+    background-color: rgb(245, 68, 192);
+    color: #ffffff;
     cursor: pointer;
+    font-family: papyrus;
+    font-weight: bolder;
+}
+
+.controls button:hover {
+    background-color: rgb(243, 9, 173);
+    
 }

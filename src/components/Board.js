@@ -1,4 +1,5 @@
 import React, { Fragment } from "react";
+import Announce from "./Announce";
 import Tile from "./Tile";
 
 export default class Board extends React.Component {
@@ -20,8 +21,9 @@ export default class Board extends React.Component {
         }
         this.state = {
             'player' : this.players.x,
-            'board' : Array(9).fill(''),
+            'board' : Array(9).fill(null),
             'won' : false,
+            'draw' : false,
             'inGame': true
         };
         this.handleTileClick = this.handleTileClick.bind(this);
@@ -59,19 +61,23 @@ export default class Board extends React.Component {
     }
 
     validateAction(index) {
-        if (this.state.board[index] !== '') {
+        if (this.state.board[index] !== null) {
             return false;
         }
         return true;
     }
 
     checkWinningCombination() {
+        if (this.state.board.every(element => element !== null)) {
+            this.setState({'draw' : true});
+            return;
+        }
         for (let i = 0; i <= 7; i++) {
             const winCondition = this.winningConditions[i];
 
-            if (this.state.board[winCondition[0]] === '' || 
-                this.state.board[winCondition[1]] === '' || 
-                this.state.board[winCondition[2]] === '') {
+            if (this.state.board[winCondition[0]] === null || 
+                this.state.board[winCondition[1]] === null || 
+                this.state.board[winCondition[2]] === null) {
                 continue;
             }
 
@@ -86,8 +92,10 @@ export default class Board extends React.Component {
     resetGame() {
         this.setState({
             'player' : this.players.x,
-            'board' : Array(9).fill(''),
-            'won' : false
+            'board' : Array(9).fill(null),
+            'won' : false,
+            'inGame': true,
+            'draw' : false
         });
     }
 
@@ -102,10 +110,33 @@ export default class Board extends React.Component {
         }
     }
 
+    getBorderClassName(index) {
+        switch (index) {
+            case 0 : 
+                return ' no-border-top no-border-left ';
+            case 1 : 
+                return ' no-border-top ';
+            case 2 : 
+                return ' no-border-top no-border-right ';
+            case 3 : 
+                return ' no-border-left ';
+            case 4 : 
+                return '';
+            case 5 : 
+                return ' no-border-right ';
+            case 6 : 
+                return ' no-border-bottom no-border-left ';
+            case 7 : 
+                return ' no-border-bottom ';
+            case 8 : 
+                return ' no-border-bottom no-border-right ';
+        }
+    }
+
     render() {
         const tiles = this.state.board.map((_, i) => {
             return <Tile
-                className={this.getClassName(this.state.board[i])}
+                className={this.getClassName(this.state.board[i]) + this.getBorderClassName(i)}
                 key={i}
                 index={i}
                 handleTileClick={this.handleTileClick}
@@ -113,11 +144,10 @@ export default class Board extends React.Component {
             />
         });
 
-        const alert = this.state.won === true ? 'Player ' + this.state.player + ' has won.' : '';
 
         return (
             <Fragment>
-                <div className={"alert " + (this.state.won === true ? "show" : "hide")}>{alert}</div>
+                <Announce player={this.state.player} won={this.state.won} draw={this.state.draw} />
                 <div className="board">
                     {tiles}
                 </div>

@@ -1,4 +1,5 @@
-import React from "react";
+import React from 'react';
+import { VscClose, VscCircleLargeOutline } from 'react-icons/vsc';
 
 export default function Tile(props) {
 
@@ -8,9 +9,9 @@ export default function Tile(props) {
 
     const getValue = () => {
         if (props.value == 1) {
-            return 'x'
+            return <VscClose />
         } else if (props.value == -1) {
-            return 'o';
+            return <VscCircleLargeOutline />
         } else {
             return '';
         }
@@ -18,9 +19,9 @@ export default function Tile(props) {
 
     return (
         <div className={'tile ' + props.className} onClick={handleOnclick}>
-            <span>
+            <div>
                 {getValue()}
-            </span>
+            </div>
         </div>
     );
 }
