@@ -1,133 +1,164 @@
 :root {
-    --blue-color : rgb(92, 181, 223);
-    --red-color : rgb(241, 112, 112);
-    --pink-color-1 : rgb(247, 103, 204);
-    --pink-color-2 : rgb(247, 142, 215);
+	--dark-color-1: #141e27;
+	--dark-color-2: #203239;
+	--light-color-1: #5be7a1;
+	--light-color-2: #3dd489;
+	--blue-color: rgb(0, 174, 255);
+	--red-color: rgb(255, 0, 170);
 }
 
-html, * {
-    box-sizing: border-box;
+html,
+* {
+	box-sizing: border-box;
 }
 
 body {
-    margin: 0;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-        'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-        sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+	margin: 0;
+	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto',
+		'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans',
+		'Helvetica Neue', sans-serif;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	background-color: var(--dark-color-1);
 }
 
 .app {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    -moz-transform: translateX(-50%) translateY(-50%);
-    -webkit-transform: translateX(-50%) translateY(-50%);
-    transform: translateX(-50%) translateY(-50%);
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	-moz-transform: translateX(-50%) translateY(-50%);
+	-webkit-transform: translateX(-50%) translateY(-50%);
+	transform: translateX(-50%) translateY(-50%);
 }
 
 .board {
-    width: 300px;
-    height: 300px;
-    margin: auto;
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    grid-template-rows: 1fr 1fr 1fr;
+	width: 300px;
+	height: 300px;
+	margin: auto;
+	display: grid;
+	grid-template-columns: 1fr 1fr 1fr;
+	grid-template-rows: 1fr 1fr 1fr;
 }
 
 .tile {
-    border: 5px solid var(--pink-color-2);
-    text-align: center;
-    cursor: pointer;
+	border: 5px solid var(--dark-color-2);
+	cursor: pointer;
+	display: flex;
+	align-items: center;
 }
 
 .no-border-top {
-    border-top: none;
+	border-top: none;
 }
 
 .no-border-left {
-    border-left: none;
+	border-left: none;
 }
 
 .no-border-right {
-    border-right: none;
+	border-right: none;
 }
 
 .no-border-bottom {
-    border-bottom: none;
+	border-bottom: none;
 }
 
 .tile div {
-    display: block;
-    position: relative;
-    height: 100%;
-    top: 10%;
+	width: 70px;
+	height: 70px;
+	margin: auto;
+	text-align: center;
 }
 
 .x-tile {
-    font-size: 50pt;
-    color: var(--red-color);
-}
-
-.x-icon {
-    color: var(--red-color);
-    font-size: 20pt;
-    margin-bottom: -7px;
+	font-size: 50pt;
+	color: var(--red-color);
+	animation: bounce 1s ease-in-out;
 }
 
 .o-tile {
-    font-size: 43pt;
-    color: var(--blue-color);
+	margin-top: px;
+	font-size: 40pt;
+	color: var(--blue-color);
+	animation: bounce 1s ease-in-out;
+}
+
+.x-icon {
+	color: var(--red-color);
+	font-size: 22pt;
+	margin-bottom: -10px;
 }
 
 .o-icon {
-    color: var(--blue-color);
-    font-size: 20pt;
-    margin-bottom: -5px;
+	color: var(--blue-color);
+	font-size: 20pt;
+	margin-bottom: -8px;
 }
 
 .alert {
-    width: 100%;
-    background-color: rgb(215, 252, 221);
-    text-align: center;
-    padding: 20px;
-    border: 1px solid rgb(123, 202, 123);
-    top: -120px;
-    position: absolute;
-    font-weight: bolder;
-    font-family: papyrus;
-    letter-spacing: 2px;
+	width: 100%;
+	text-align: center;
+	padding: 20px;
+	top: -120px;
+	position: absolute;
+	font-weight: bolder;
+	font-family: papyrus;
+	letter-spacing: 2px;
+	color: var(--light-color-2);
 }
 
 .hide {
-    display: none !important;
+	display: none !important;
 }
 
 .show {
-    display: block !important;
+	display: block !important;
 }
 
 .controls {
-    width: 100%;
-    text-align: center;
-    bottom: -100px;
-    position: absolute;
+	width: 100%;
+	text-align: center;
+	bottom: -100px;
+	position: absolute;
 }
 
 .controls button {
-    height: 50px;
-    width: 100%;
-    letter-spacing: 2px;
-    border: 1px solid rgb(243, 9, 173);
-    background-color: rgb(245, 68, 192);
-    color: #ffffff;
-    cursor: pointer;
-    font-family: papyrus;
-    font-weight: bolder;
+	padding: 15px;
+	letter-spacing: 2px;
+	font-family: papyrus;
+	font-weight: bolder;
+	color: var(--dark-color-2);
+	background-color: var(--light-color-2);
+	border: none;
+	cursor: pointer;
+	border-radius: 5px;
 }
 
 .controls button:hover {
-    background-color: rgb(243, 9, 173);
-    
+	color: var(--dark-color-1);
+	background-color: var(--light-color-1);
+}
+
+@keyframes bounce {
+	0% {
+		transform: scale(1, 1) translateY(0);
+	}
+	10% {
+		transform: scale(1.1, 0.9) translateY(0);
+	}
+	30% {
+		transform: scale(0.7, 1.1) translateY(-55px);
+	}
+	50% {
+		transform: scale(1.05, 0.95) translateY(0);
+	}
+	60% {
+		transform: scale(1, 1) translateY(-10px);
+	}
+	65% {
+		transform: scale(1, 1) translateY(0);
+	}
+	100% {
+		transform: scale(1, 1) translateY(0);
+	}
 }
