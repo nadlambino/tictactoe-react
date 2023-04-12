@@ -1,7 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './components/App';
-import reportWebVitals from './reportWebVitals';
 import { io } from 'socket.io-client';
 
 const URL = 'http://localhost';
@@ -14,5 +13,3 @@ root.render(
 		<App />
 	</React.StrictMode>
 );
-
-reportWebVitals();
