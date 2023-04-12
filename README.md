@@ -4,7 +4,7 @@
 - Run `npm install`
 
 ### Deployed version
-https://nadlambino-tictactoe.netlify.app/
+https://tictactoe-nadlambino.netlify.app/
 
 # Available Scripts
 ### `npm start`
