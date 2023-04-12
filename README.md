@@ -2,6 +2,7 @@
 ### Local Setup
 - Clone the project
 - Run `npm install`
+- Run `nmp start`
 
 ### Deployed version
 https://tictactoe-nadlambino.netlify.app/
