@@ -12,6 +12,6 @@ export const socket = io(URL, {
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
 	<React.StrictMode>
-		<App />
+		<App socket={socket} />
 	</React.StrictMode>
 );

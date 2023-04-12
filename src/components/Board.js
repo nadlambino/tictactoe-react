@@ -1,128 +1,127 @@
-import React, { Fragment } from 'react';
+import React, { useState, useEffect } from 'react';
 import Announce from './Announce';
 import Tile from './Tile';
 
-export default class Board extends React.Component {
-	constructor() {
-		super();
-		this.winningConditions = [
-			[0, 1, 2],
-			[3, 4, 5],
-			[6, 7, 8],
-			[0, 3, 6],
-			[1, 4, 7],
-			[2, 5, 8],
-			[0, 4, 8],
-			[2, 4, 6],
-		];
-		this.players = {
-			x: '1',
-			o: '-1',
-		};
-		this.state = {
-			player: this.players.x,
-			board: Array(9).fill(null),
-			won: false,
-			draw: false,
-			inGame: true,
-		};
-		this.handleTileClick = this.handleTileClick.bind(this);
-		this.resetGame = this.resetGame.bind(this);
-	}
+export default function Board({socket}) {
+	const winningConditions = [
+		[0, 1, 2],
+		[3, 4, 5],
+		[6, 7, 8],
+		[0, 3, 6],
+		[1, 4, 7],
+		[2, 5, 8],
+		[0, 4, 8],
+		[2, 4, 6],
+	];
+	const players = {
+		x: '1',
+		o: '-1',
+	};
+	const [state, setState] = useState({
+		player: players.x,
+		board: Array(9).fill(null),
+		won: false,
+		draw: false,
+		inGame: true,
+	});
 
-	async handleTileClick(index) {
-		let isValidAction = this.validateAction(index);
-		if (isValidAction === false || this.state.inGame === false) {
+  useEffect(() => {
+    checkWinningCombination()
+    if (state.won === true) {
+      setState((prevState) => ({...prevState, inGame: false}));
+    }
+    changePlayer();
+  }, [state.board, state.won, state.inGame, state.draw])
+
+  useEffect(() => {
+    checkForDraw()
+  }, [state.player])
+
+	const handleTileClick = (index) => {
+		let isValidAction = validateAction(index);
+		if (isValidAction === false || state.inGame === false) {
 			return false;
 		}
 
-		await this.markTile(index);
-		await this.checkWinningCombination();
-		if (this.state.won === true) {
-			this.setState({ inGame: false });
-			return;
-		}
-		await this.checkForDraw();
-		this.changePlayer();
-	}
+		markTile(index);
+	};
 
-	markTile(index) {
-		let board = [...this.state.board];
-		board[index] = this.state.player;
-		this.setState({
-			board: board,
-		});
-	}
+	const markTile = async (index) => {
+		let board = [...state.board];
+		board[index] = state.player;
+    setState((prevState) => ({...prevState, board}));
+	};
 
-	changePlayer() {
+	const changePlayer = () => {
 		let nextPlayer =
-			this.state.player === this.players.x
-				? this.players.o
-				: this.players.x;
-		this.setState({
-			player: nextPlayer,
-		});
-	}
+			state.player === players.x
+				? players.o
+				: players.x;
+		setState((prevState) => ({...prevState, player: nextPlayer }));
+	};
 
-	validateAction(index) {
-		if (this.state.board[index] !== null) {
+	const validateAction = (index) => {
+		if (state.board[index] !== null) {
 			return false;
 		}
 		return true;
-	}
+	};
 
-	checkWinningCombination() {
+	const checkWinningCombination = () => {
 		for (let i = 0; i <= 7; i++) {
-			const winCondition = this.winningConditions[i];
+			const winCondition = winningConditions[i];
 
 			if (
-				this.state.board[winCondition[0]] === null ||
-				this.state.board[winCondition[1]] === null ||
-				this.state.board[winCondition[2]] === null
+				state.board[winCondition[0]] === null ||
+				state.board[winCondition[1]] === null ||
+				state.board[winCondition[2]] === null
 			) {
 				continue;
 			}
 
 			if (
-				this.state.board[winCondition[0]] ===
-					this.state.board[winCondition[1]] &&
-				this.state.board[winCondition[1]] ===
-					this.state.board[winCondition[2]]
+				state.board[winCondition[0]] ===
+					state.board[winCondition[1]] &&
+				state.board[winCondition[1]] ===
+					state.board[winCondition[2]]
 			) {
-				this.setState({ won: true });
+				setState((prevState) => ({...prevState, won: true }));
 				break;
 			}
 		}
-	}
+	};
 
-	checkForDraw() {
-		if (this.state.board.every((element) => element !== null)) {
-			this.setState({ draw: true });
+	const checkForDraw = () => {
+    if (state.won === true) {
+      return
+    }
+		if (state.board.every((element) => element !== null)) {
+			setState(prevState => ({...prevState, draw: true }));
 		}
-	}
+	};
 
-	resetGame() {
-		this.setState({
-			player: this.players.x,
+	const resetGame = () => {
+		setState(prevState => ({
+			player: players.x,
 			board: Array(9).fill(null),
 			won: false,
 			inGame: true,
 			draw: false,
-		});
-	}
+		}));
+	};
 
-	getClassName(value) {
+	const getClassName = (value) => {
 		switch (value) {
-			case this.players.x:
+			case players.x:
 				return 'x-tile';
-			case this.players.o:
+			case players.o:
 				return 'o-tile';
 			default:
 				return '';
 		}
-	}
+	};
 
-	getBorderClassName(index) {
+	const getBorderClassName = (index) => {
 		switch (index) {
 			case 0:
 				return ' no-border-top no-border-left ';
@@ -134,45 +133,45 @@ export default class Board extends React.Component {
 				return ' no-border-left ';
 			case 4:
 				return '';
-			case 5:
-				return ' no-border-right ';
-			case 6:
-				return ' no-border-bottom no-border-left ';
-			case 7:
-				return ' no-border-bottom ';
-			case 8:
-				return ' no-border-bottom no-border-right ';
-			default:
-				return '';
-		}
-	}
+      case 5:
+        return ' no-border-right ';
+      case 6:
+        return ' no-border-bottom no-border-left ';
+      case 7:
+        return ' no-border-bottom ';
+      case 8:
+        return ' no-border-bottom no-border-right ';
+      default:
+        return '';
+    }
+  }
 
-	render() {
-		const tiles = this.state.board.map((_, i) => {
-			return (
-				<Tile
-					borderClassName={this.getBorderClassName(i)}
-					tileClassName={this.getClassName(this.state.board[i])}
-					key={i}
-					index={i}
-					handleTileClick={this.handleTileClick}
-					value={this.state.board[i]}
-				/>
-			);
-		});
-
-		return (
-			<Fragment>
-				<Announce
-					player={this.state.player}
-					won={this.state.won}
-					draw={this.state.draw}
-				/>
-				<div className='board'>{tiles}</div>
-				<div className='controls'>
-					<button onClick={this.resetGame}>Play Again</button>
-				</div>
-			</Fragment>
-		);
-	}
+  return (
+    <>
+      <Announce
+        player={state.player}
+        won={state.won}
+        draw={state.draw}
+      />
+      <div className='board'>
+        {
+          state.board && state.board.map((_, i) => {
+            return (
+              <Tile
+                borderClassName={getBorderClassName(i)}
+                tileClassName={getClassName(state.board[i])}
+                key={i}
+                index={i}
+                handleTileClick={handleTileClick}
+                value={state.board[i]}
+              />
+            )
+          })
+        }
+      </div>
+      <div className='controls'>
+        <button onClick={resetGame}>Play Again</button>
+      </div>
+    </>
+  );
 }
