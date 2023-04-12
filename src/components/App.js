@@ -1,15 +1,16 @@
 import './../styles/app.css';
-import React from 'react';
+import React, { useState } from 'react';
 import Board from './Board.js';
+import Form from './Form';
 
-class App extends React.Component {
-	render() {
-		return (
-			<div className='app'>
-				<Board />
-			</div>
-		);
-	}
+export default function App() {
+  const [connected, setConnected] = useState(false)
+
+  return (
+    <div className='app'>
+      {
+        !connected ? <Form /> : <Board />
+      }
+    </div>
+  )
 }
-
-export default App;

@@ -22,13 +22,20 @@ body {
 	background-color: var(--dark-color-1);
 }
 
+#root {
+  height: 100vh;
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+}
+
 .app {
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	-moz-transform: translateX(-50%) translateY(-50%);
-	-webkit-transform: translateX(-50%) translateY(-50%);
-	transform: translateX(-50%) translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 40px;
 }
 
 .board {
@@ -99,8 +106,6 @@ body {
 	width: 100%;
 	text-align: center;
 	padding: 20px;
-	top: -120px;
-	position: absolute;
 	font-weight: bolder;
 	font-family: papyrus;
 	letter-spacing: 2px;
@@ -118,8 +123,6 @@ body {
 .controls {
 	width: 100%;
 	text-align: center;
-	bottom: -100px;
-	position: absolute;
 }
 
 .controls button {
