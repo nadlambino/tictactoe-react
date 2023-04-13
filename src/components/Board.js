@@ -63,7 +63,7 @@ export default function Board({socket, room}) {
 		let newBoard = [...board];
 		newBoard[index] = currentPlayer;
     setBoard(newBoard);
-    socket.emit('move', {room, board: newBoard, won, inGame})
+    socket.emit('move', {board: newBoard, won, inGame})
 	};
 
 	const changePlayer = () => {
@@ -123,7 +123,8 @@ export default function Board({socket, room}) {
     setDraw(false)
     setInGame(true)
 
-    socket.emit('move', {room, board: emptyBoard, currentPlayer: players.x, won: false, inGame: true})
+    socket.emit('move', {board: emptyBoard, won: false, inGame: true})
+    socket.emit('change_player', players.x)
     socket.emit('draw', false)
 	};
 
