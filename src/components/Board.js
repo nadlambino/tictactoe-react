@@ -17,36 +17,35 @@ export default function Board({socket, room}) {
 		x: '1',
 		o: '-1',
 	};
-	const [state, setState] = useState({
-		inGame: true,
-	});
 
   const [currentPlayer, setCurrentPlayer] = useState(players.x)
   const [board, setBoard] = useState(Array(9).fill(null))
   const [won, setWon] = useState(false)
   const [draw, setDraw] = useState(false)
+  const [inGame, setInGame] = useState(true)
 
   useEffect(() => {
     checkWinningCombination()
     if (won === true) {
-      setState((prevState) => ({...prevState, inGame: false}));
+      setInGame(false);
     }
     changePlayer();
-  }, [board, won, state.inGame, draw])
+  }, [board, won, inGame, draw])
 
   useEffect(() => {
     checkForDraw()
-    socket.on('move', ({board, currentPlayer, won, draw}) => {
-      setBoard(board)
-      setCurrentPlayer(currentPlayer)
-      setWon(won)
-      setDraw(draw)
+    socket.on('move', (data) => {
+      setBoard(data.board)
+      setCurrentPlayer(data.currentPlayer)
+      setWon(data.won)
+      setDraw(data.draw)
+      setInGame(data.inGame)
     })
   }, [currentPlayer])
 
 	const handleTileClick = (index) => {
 		let isValidAction = validateAction(index);
-		if (isValidAction === false || state.inGame === false) {
+		if (isValidAction === false || inGame === false) {
 			return false;
 		}
 
@@ -57,7 +56,7 @@ export default function Board({socket, room}) {
 		let newBoard = [...board];
 		newBoard[index] = currentPlayer;
     setBoard(newBoard);
-    socket.emit('move', {...state, room, board: newBoard})
+    socket.emit('move', {room, board: newBoard, currentPlayer, won, draw, inGame})
 	};
 
 	const changePlayer = () => {
@@ -105,23 +104,22 @@ export default function Board({socket, room}) {
     }
 		if (board.every((element) => element !== null)) {
       setDraw(true)
-      socket.emit('move', {board, currentPlayer, won, draw: true})
+      socket.emit('move', {room, board, currentPlayer, won, draw: true, inGame})
     }
 	};
 
 	const resetGame = () => {
-		setState(prevState => ({
-			inGame: true,
-		}));
-
-    const board = Array(9).fill(null);
+    const newBoard = Array(9).fill(null);
 
     setCurrentPlayer(players.x);
-    setBoard(board);
+    setBoard(newBoard);
     setWon(false)
     setDraw(false)
+    setInGame(true)
 
-    socket.emit('move', {board, currentPlayer: players.x, won: false, draw: false})
+    console.log(newBoard)
+
+    socket.emit('move', {room, board: newBoard, currentPlayer: players.x, won: false, draw: false, inGame: true})
 	};
 
 	const getClassName = (value) => {
