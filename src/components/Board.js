@@ -18,13 +18,13 @@ export default function Board({socket, room}) {
 		o: '-1',
 	};
 	const [state, setState] = useState({
-		draw: false,
 		inGame: true,
 	});
 
   const [currentPlayer, setCurrentPlayer] = useState(players.x)
   const [board, setBoard] = useState(Array(9).fill(null))
   const [won, setWon] = useState(false)
+  const [draw, setDraw] = useState(false)
 
   useEffect(() => {
     checkWinningCombination()
@@ -32,14 +32,15 @@ export default function Board({socket, room}) {
       setState((prevState) => ({...prevState, inGame: false}));
     }
     changePlayer();
-  }, [board, won, state.inGame, state.draw])
+  }, [board, won, state.inGame, draw])
 
   useEffect(() => {
     checkForDraw()
-    socket.on('move', ({board, currentPlayer, won}) => {
+    socket.on('move', ({board, currentPlayer, won, draw}) => {
       setBoard(board)
       setCurrentPlayer(currentPlayer)
       setWon(won)
+      setDraw(draw)
     })
   }, [currentPlayer])
 
@@ -103,14 +104,14 @@ export default function Board({socket, room}) {
       return
     }
 		if (board.every((element) => element !== null)) {
-			setState(prevState => ({...prevState, draw: true }));
-		}
+      setDraw(true)
+      socket.emit('move', {board, currentPlayer, won, draw: true})
+    }
 	};
 
 	const resetGame = () => {
 		setState(prevState => ({
 			inGame: true,
-			draw: false,
 		}));
 
     const board = Array(9).fill(null);
@@ -118,8 +119,9 @@ export default function Board({socket, room}) {
     setCurrentPlayer(players.x);
     setBoard(board);
     setWon(false)
+    setDraw(false)
 
-    socket.emit('move', {board, currentPlayer: players.x, won: false})
+    socket.emit('move', {board, currentPlayer: players.x, won: false, draw: false})
 	};
 
 	const getClassName = (value) => {
@@ -163,7 +165,7 @@ export default function Board({socket, room}) {
       <Announce
         player={currentPlayer}
         won={won}
-        draw={state.draw}
+        draw={draw}
       />
       <div className='board'>
         {
