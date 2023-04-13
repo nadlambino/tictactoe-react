@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Announce from './Announce';
 import Tile from './Tile';
 
-export default function Board({socket}) {
+export default function Board({socket, room}) {
 	const winningConditions = [
 		[0, 1, 2],
 		[3, 4, 5],
@@ -25,7 +25,7 @@ export default function Board({socket}) {
 		inGame: true,
 	});
 
-  const [playersList, setPlayers] = useState([])
+  const [board, setBoard] = useState(Array(9).fill(null))
 
   useEffect(() => {
     checkWinningCombination()
@@ -33,24 +33,14 @@ export default function Board({socket}) {
       setState((prevState) => ({...prevState, inGame: false}));
     }
     changePlayer();
-  }, [state.board, state.won, state.inGame, state.draw])
+  }, [board, state.won, state.inGame, state.draw])
 
   useEffect(() => {
     checkForDraw()
+    socket.on('move', ({board, state}) => {
+      setBoard(board)
+    })
   }, [state.player])
-
-  
-  useEffect(() => {
-    socket.on('joined_game', handleJoinedGame)
-
-    return () => {
-      socket.disconnect()
-    };
-  }, [])
-  
-  const handleJoinedGame = (data) => {
-    setPlayers((prevState) => [...prevState, data])
-  }
 
 	const handleTileClick = (index) => {
 		let isValidAction = validateAction(index);
@@ -62,9 +52,10 @@ export default function Board({socket}) {
 	};
 
 	const markTile = async (index) => {
-		let board = [...state.board];
-		board[index] = state.player;
-    setState((prevState) => ({...prevState, board}));
+		let newBoard = [...board];
+		newBoard[index] = state.player;
+    setBoard(newBoard);
+    socket.emit('move', {...state, room, board: newBoard})
 	};
 
 	const changePlayer = () => {
@@ -76,7 +67,7 @@ export default function Board({socket}) {
 	};
 
 	const validateAction = (index) => {
-		if (state.board[index] !== null) {
+		if (board[index] !== null) {
 			return false;
 		}
 		return true;
@@ -87,18 +78,18 @@ export default function Board({socket}) {
 			const winCondition = winningConditions[i];
 
 			if (
-				state.board[winCondition[0]] === null ||
-				state.board[winCondition[1]] === null ||
-				state.board[winCondition[2]] === null
+				board[winCondition[0]] === null ||
+				board[winCondition[1]] === null ||
+				board[winCondition[2]] === null
 			) {
 				continue;
 			}
 
 			if (
-				state.board[winCondition[0]] ===
-					state.board[winCondition[1]] &&
-				state.board[winCondition[1]] ===
-					state.board[winCondition[2]]
+				board[winCondition[0]] ===
+					board[winCondition[1]] &&
+				board[winCondition[1]] ===
+					board[winCondition[2]]
 			) {
 				setState((prevState) => ({...prevState, won: true }));
 				break;
@@ -110,7 +101,7 @@ export default function Board({socket}) {
     if (state.won === true) {
       return
     }
-		if (state.board.every((element) => element !== null)) {
+		if (board.every((element) => element !== null)) {
 			setState(prevState => ({...prevState, draw: true }));
 		}
 	};
@@ -118,11 +109,12 @@ export default function Board({socket}) {
 	const resetGame = () => {
 		setState(prevState => ({
 			player: players.x,
-			board: Array(9).fill(null),
 			won: false,
 			inGame: true,
 			draw: false,
 		}));
+
+    setBoard(Array(9).fill(null))
 	};
 
 	const getClassName = (value) => {
@@ -168,23 +160,17 @@ export default function Board({socket}) {
         won={state.won}
         draw={state.draw}
       />
-      
-      {
-        playersList && playersList.map((player, index) => (
-          <span className='text' key={index}>Player {player.username} has {player.state} the room</span>
-        ))
-      }
       <div className='board'>
         {
-          state.board && state.board.map((_, i) => {
+          board && board.map((_, i) => {
             return (
               <Tile
                 borderClassName={getBorderClassName(i)}
-                tileClassName={getClassName(state.board[i])}
+                tileClassName={getClassName(board[i])}
                 key={i}
                 index={i}
                 handleTileClick={handleTileClick}
-                value={state.board[i]}
+                value={board[i]}
               />
             )
           })

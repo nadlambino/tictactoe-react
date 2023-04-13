@@ -5,11 +5,13 @@ import Form from './Form';
 
 export default function App({socket}) {
   const [connected, setConnected] = useState(false)
+  const [room, setRoom] = useState('')
 
-  const createRoomCallback = async ({username, room, type}) => {
+  const createRoomCallback = async ({username, room}) => {
     socket.connect()
     setConnected(true)
-    socket.emit('join_game', {username, room, type})
+    setRoom(room)
+    socket.emit('join', {username, room})
   }
 
   return (
@@ -17,12 +19,12 @@ export default function App({socket}) {
       {
         !connected ? 
         <Form 
-          socket={socket}
           createRoomCallback={createRoomCallback} 
         />
         :
         <Board 
           socket={socket}
+          room={room}
         />
       }
     </div>

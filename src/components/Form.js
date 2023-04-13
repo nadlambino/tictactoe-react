@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import './../styles/form.css'
 
-export default function Form({socket, createRoomCallback}) {
+export default function Form({createRoomCallback}) {
   const [username, setUsername] = useState('')
   const [room, setRoom] = useState('')
 
@@ -10,7 +10,7 @@ export default function Form({socket, createRoomCallback}) {
       return alert('Please provide a username and a room id')
     }
 
-    createRoomCallback({username, room, type: 'create'})
+    createRoomCallback({username, room})
   }
 
   const handleUsernameChange = (username) => {
