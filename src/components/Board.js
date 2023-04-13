@@ -2,24 +2,27 @@ import React, { useState, useEffect } from 'react';
 import Announce from './Announce';
 import Tile from './Tile';
 
-export default function Board({socket, room}) {
-	const winningConditions = [
-		[0, 1, 2],
-		[3, 4, 5],
-		[6, 7, 8],
-		[0, 3, 6],
-		[1, 4, 7],
-		[2, 5, 8],
-		[0, 4, 8],
-		[2, 4, 6],
-	];
-	const players = {
-		x: '1',
-		o: '-1',
-	};
+const winningConditions = [
+  [0, 1, 2],
+  [3, 4, 5],
+  [6, 7, 8],
+  [0, 3, 6],
+  [1, 4, 7],
+  [2, 5, 8],
+  [0, 4, 8],
+  [2, 4, 6],
+];
 
+const players = {
+  x: '1',
+  o: '-1',
+};
+
+const emptyBoard = Array(9).fill(null)
+
+export default function Board({socket, room}) {
   const [currentPlayer, setCurrentPlayer] = useState(players.x)
-  const [board, setBoard] = useState(Array(9).fill(null))
+  const [board, setBoard] = useState(emptyBoard)
   const [won, setWon] = useState(false)
   const [draw, setDraw] = useState(false)
   const [inGame, setInGame] = useState(true)
@@ -27,21 +30,24 @@ export default function Board({socket, room}) {
   useEffect(() => {
     checkWinningCombination()
     if (won === true) {
-      setInGame(false);
+      return setInGame(false);
     }
-    changePlayer();
-  }, [board, won, inGame, draw])
 
-  useEffect(() => {
     checkForDraw()
+  }, [currentPlayer])
+  useEffect(() => {
+    socket.on('change_player', (player) => {
+      setCurrentPlayer(player)
+    })
     socket.on('move', (data) => {
       setBoard(data.board)
-      setCurrentPlayer(data.currentPlayer)
       setWon(data.won)
-      setDraw(data.draw)
       setInGame(data.inGame)
     })
-  }, [currentPlayer])
+    socket.on('draw', (data) => {
+      setDraw(data)
+    })
+  }, [])
 
 	const handleTileClick = (index) => {
 		let isValidAction = validateAction(index);
@@ -50,13 +56,14 @@ export default function Board({socket, room}) {
 		}
 
 		markTile(index);
+    changePlayer();
 	};
 
 	const markTile = async (index) => {
 		let newBoard = [...board];
 		newBoard[index] = currentPlayer;
     setBoard(newBoard);
-    socket.emit('move', {room, board: newBoard, currentPlayer, won, draw, inGame})
+    socket.emit('move', {room, board: newBoard, won, inGame})
 	};
 
 	const changePlayer = () => {
@@ -65,6 +72,7 @@ export default function Board({socket, room}) {
 				? players.o
 				: players.x;
 		setCurrentPlayer(nextPlayer);
+    socket.emit('change_player', nextPlayer)
 	};
 
 	const validateAction = (index) => {
@@ -102,24 +110,21 @@ export default function Board({socket, room}) {
     if (won === true) {
       return
     }
-		if (board.every((element) => element !== null)) {
+		if (board.every((element) => element !== null) && won === false) {
       setDraw(true)
-      socket.emit('move', {room, board, currentPlayer, won, draw: true, inGame})
+      socket.emit('draw', true)
     }
 	};
 
 	const resetGame = () => {
-    const newBoard = Array(9).fill(null);
-
     setCurrentPlayer(players.x);
-    setBoard(newBoard);
+    setBoard(emptyBoard);
     setWon(false)
     setDraw(false)
     setInGame(true)
 
-    console.log(newBoard)
-
-    socket.emit('move', {room, board: newBoard, currentPlayer: players.x, won: false, draw: false, inGame: true})
+    socket.emit('move', {room, board: emptyBoard, currentPlayer: players.x, won: false, inGame: true})
+    socket.emit('draw', false)
 	};
 
 	const getClassName = (value) => {
