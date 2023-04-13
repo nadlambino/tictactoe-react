@@ -1,13 +1,15 @@
 import './../styles/app.css';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Board from './Board.js';
 import Form from './Form';
 
 export default function App({socket}) {
   const [connected, setConnected] = useState(false)
 
-  const createRoomCallback = (isConnected) => {
-    setConnected(isConnected)
+  const createRoomCallback = async ({username, room, type}) => {
+    socket.connect()
+    setConnected(true)
+    socket.emit('join_game', {username, room, type})
   }
 
   return (
@@ -17,7 +19,7 @@ export default function App({socket}) {
         <Form 
           socket={socket}
           createRoomCallback={createRoomCallback} 
-        /> 
+        />
         :
         <Board 
           socket={socket}

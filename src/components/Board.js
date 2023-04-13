@@ -25,6 +25,8 @@ export default function Board({socket}) {
 		inGame: true,
 	});
 
+  const [playersList, setPlayers] = useState([])
+
   useEffect(() => {
     checkWinningCombination()
     if (state.won === true) {
@@ -36,6 +38,19 @@ export default function Board({socket}) {
   useEffect(() => {
     checkForDraw()
   }, [state.player])
+
+  
+  useEffect(() => {
+    socket.on('joined_game', handleJoinedGame)
+
+    return () => {
+      socket.disconnect()
+    };
+  }, [])
+  
+  const handleJoinedGame = (data) => {
+    setPlayers((prevState) => [...prevState, data])
+  }
 
 	const handleTileClick = (index) => {
 		let isValidAction = validateAction(index);
@@ -153,6 +168,12 @@ export default function Board({socket}) {
         won={state.won}
         draw={state.draw}
       />
+      
+      {
+        playersList && playersList.map((player, index) => (
+          <span className='text' key={index}>Player {player.username} has {player.state} the room</span>
+        ))
+      }
       <div className='board'>
         {
           state.board && state.board.map((_, i) => {

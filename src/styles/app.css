@@ -30,6 +30,10 @@ body {
   align-items: center;
 }
 
+.text {
+  color: var(--light-color-2);
+}
+
 .app {
   display: flex;
   flex-direction: column;
