@@ -18,29 +18,28 @@ export default function Board({socket, room}) {
 		o: '-1',
 	};
 	const [state, setState] = useState({
-		player: players.x,
-		board: Array(9).fill(null),
-		won: false,
 		draw: false,
 		inGame: true,
 	});
 
   const [currentPlayer, setCurrentPlayer] = useState(players.x)
   const [board, setBoard] = useState(Array(9).fill(null))
+  const [won, setWon] = useState(false)
 
   useEffect(() => {
     checkWinningCombination()
-    if (state.won === true) {
+    if (won === true) {
       setState((prevState) => ({...prevState, inGame: false}));
     }
     changePlayer();
-  }, [board, state.won, state.inGame, state.draw])
+  }, [board, won, state.inGame, state.draw])
 
   useEffect(() => {
     checkForDraw()
-    socket.on('move', ({board, currentPlayer}) => {
+    socket.on('move', ({board, currentPlayer, won}) => {
       setBoard(board)
       setCurrentPlayer(currentPlayer)
+      setWon(won)
     })
   }, [currentPlayer])
 
@@ -93,14 +92,14 @@ export default function Board({socket, room}) {
 				board[winCondition[1]] ===
 					board[winCondition[2]]
 			) {
-				setState((prevState) => ({...prevState, won: true }));
+				setWon(true);
 				break;
 			}
 		}
 	};
 
 	const checkForDraw = () => {
-    if (state.won === true) {
+    if (won === true) {
       return
     }
 		if (board.every((element) => element !== null)) {
@@ -110,7 +109,6 @@ export default function Board({socket, room}) {
 
 	const resetGame = () => {
 		setState(prevState => ({
-			won: false,
 			inGame: true,
 			draw: false,
 		}));
@@ -119,8 +117,9 @@ export default function Board({socket, room}) {
 
     setCurrentPlayer(players.x);
     setBoard(board);
+    setWon(false)
 
-    socket.emit('move', {board, currentPlayer: players.x})
+    socket.emit('move', {board, currentPlayer: players.x, won: false})
 	};
 
 	const getClassName = (value) => {
@@ -163,7 +162,7 @@ export default function Board({socket, room}) {
     <>
       <Announce
         player={currentPlayer}
-        won={state.won}
+        won={won}
         draw={state.draw}
       />
       <div className='board'>
