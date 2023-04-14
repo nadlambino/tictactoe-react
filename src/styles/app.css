@@ -1,8 +1,10 @@
 :root {
 	--dark-color-1: #141e27;
 	--dark-color-2: #203239;
+	--dark-color-3: #27404a;
 	--light-color-1: #5be7a1;
 	--light-color-2: #3dd489;
+	--light-color-3: #4d9772;
 	--blue-color: rgb(0, 174, 255);
 	--red-color: rgb(255, 0, 170);
 }
@@ -111,8 +113,7 @@ body {
 	text-align: center;
 	padding: 20px;
 	font-weight: bolder;
-	font-family: papyrus;
-	letter-spacing: 2px;
+	letter-spacing: 1px;
 	color: var(--light-color-2);
 }
 
@@ -129,21 +130,20 @@ body {
 	text-align: center;
 }
 
-.controls button {
-	padding: 15px;
-	letter-spacing: 2px;
-	font-family: papyrus;
-	font-weight: bolder;
-	color: var(--dark-color-2);
-	background-color: var(--light-color-2);
-	border: none;
-	cursor: pointer;
-	border-radius: 5px;
+button {
+  text-transform: uppercase;
+  background-color: var(--dark-color-2);
+  border: 1px solid var(--dark-color-1);
+  color: var(--light-color-2);
+  padding: 15px 20px;
+  border-radius: 5px;
+  min-width: 150px;
+  letter-spacing: 1px;
 }
 
-.controls button:hover {
-	color: var(--dark-color-1);
-	background-color: var(--light-color-1);
+button:hover {
+  cursor: pointer;
+  background-color: var(--dark-color-3);
 }
 
 @keyframes bounce {
