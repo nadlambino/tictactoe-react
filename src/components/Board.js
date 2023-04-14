@@ -27,6 +27,7 @@ export default function Board({socket, username}) {
   const [won, setWon] = useState(false)
   const [draw, setDraw] = useState(false)
   const [inGame, setInGame] = useState(true)
+  const [winner, setWinner] = useState(null)
 
   useEffect(() => {
     checkWinningCombination()
@@ -35,7 +36,8 @@ export default function Board({socket, username}) {
     }
 
     checkForDraw()
-  }, [currentPlayer])
+    changePlayer()
+  }, [board])
 
   useEffect(() => {
     socket.on('change_player', (player) => {
@@ -53,8 +55,7 @@ export default function Board({socket, username}) {
 
 	const handleTileClick = (index) => {
     role = role === null ? currentPlayer : role
-    console.log(role, currentPlayer)
-    if (role !== currentPlayer) {
+    if (role !== currentPlayer || won === true || draw === true) {
       return
     }
 
@@ -64,7 +65,6 @@ export default function Board({socket, username}) {
 		}
 
 		markTile(index);
-    changePlayer();
 	};
 
 	const markTile = async (index) => {
@@ -109,6 +109,7 @@ export default function Board({socket, username}) {
 					board[winCondition[2]]
 			) {
 				setWon(true);
+        setWinner(currentPlayer)
 				break;
 			}
 		}
@@ -130,6 +131,7 @@ export default function Board({socket, username}) {
     setWon(false)
     setDraw(false)
     setInGame(true)
+    setWinner(null)
     role = null
 
     socket.emit('move', {board: emptyBoard, won: false, inGame: true})
@@ -176,7 +178,7 @@ export default function Board({socket, username}) {
   return (
     <>
       <Announce
-        player={currentPlayer}
+        player={winner}
         won={won}
         draw={draw}
       />
