@@ -58,7 +58,6 @@ export default function Board({socket, username}) {
 
 	const handleTileClick = (index) => {
     role = role === null ? currentPlayer : role
-    console.log(role, currentPlayer)
     if (role !== currentPlayer || won === true || draw === true) {
       return
     }
@@ -79,10 +78,7 @@ export default function Board({socket, username}) {
 	};
 
 	const changePlayer = () => {
-		let nextPlayer =
-			currentPlayer === players.x
-				? players.o
-				: players.x;
+		let nextPlayer = currentPlayer === players.x ? players.o : players.x;
 		setCurrentPlayer(nextPlayer);
     socket.emit('change_player', nextPlayer)
 	};
