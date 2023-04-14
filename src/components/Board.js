@@ -19,8 +19,9 @@ const players = {
 };
 
 const emptyBoard = Array(9).fill(null)
+let role = null
 
-export default function Board({socket, room}) {
+export default function Board({socket, username}) {
   const [currentPlayer, setCurrentPlayer] = useState(players.x)
   const [board, setBoard] = useState(emptyBoard)
   const [won, setWon] = useState(false)
@@ -35,6 +36,7 @@ export default function Board({socket, room}) {
 
     checkForDraw()
   }, [currentPlayer])
+
   useEffect(() => {
     socket.on('change_player', (player) => {
       setCurrentPlayer(player)
@@ -50,7 +52,13 @@ export default function Board({socket, room}) {
   }, [])
 
 	const handleTileClick = (index) => {
-		let isValidAction = validateAction(index);
+    role = role === null ? currentPlayer : role
+    console.log(role, currentPlayer)
+    if (role !== currentPlayer) {
+      return
+    }
+
+    let isValidAction = validateAction(index);
 		if (isValidAction === false || inGame === false) {
 			return false;
 		}
@@ -122,6 +130,7 @@ export default function Board({socket, room}) {
     setWon(false)
     setDraw(false)
     setInGame(true)
+    role = null
 
     socket.emit('move', {board: emptyBoard, won: false, inGame: true})
     socket.emit('change_player', players.x)
