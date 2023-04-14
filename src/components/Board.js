@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Announce from './Announce';
 import Tile from './Tile';
+import Player from './Player';
 
 const winningConditions = [
   [0, 1, 2],
@@ -187,6 +188,7 @@ export default function Board({socket, username}) {
         won={won}
         draw={draw}
       />
+      <Player player={role} />
       <div className='board'>
         {
           board && board.map((_, i) => {
