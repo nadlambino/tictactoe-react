@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { VscClose, VscCircleLargeOutline } from 'react-icons/vsc';
 
 export default function Announce(props) {
