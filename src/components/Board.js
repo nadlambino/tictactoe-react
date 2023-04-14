@@ -36,7 +36,9 @@ export default function Board({socket, username}) {
     }
 
     checkForDraw()
-    changePlayer()
+    if (role !== null) {
+      changePlayer()
+    }
   }, [board])
 
   useEffect(() => {
@@ -51,10 +53,12 @@ export default function Board({socket, username}) {
     socket.on('draw', (data) => {
       setDraw(data)
     })
+    socket.on('reset', resetGame)
   }, [])
 
 	const handleTileClick = (index) => {
     role = role === null ? currentPlayer : role
+    console.log(role, currentPlayer)
     if (role !== currentPlayer || won === true || draw === true) {
       return
     }
@@ -124,6 +128,18 @@ export default function Board({socket, username}) {
       socket.emit('draw', true)
     }
 	};
+
+  const handleResetClick = () => {
+    setCurrentPlayer(players.x);
+    setBoard(emptyBoard);
+    setWon(false)
+    setDraw(false)
+    setInGame(true)
+    setWinner(null)
+    role = null
+    
+    socket.emit('reset')
+  }
 
 	const resetGame = () => {
     setCurrentPlayer(players.x);
@@ -199,7 +215,7 @@ export default function Board({socket, username}) {
         }
       </div>
       <div className='controls'>
-        <button onClick={resetGame}>Play Again</button>
+        <button onClick={handleResetClick}>Play Again</button>
       </div>
     </>
   );
