@@ -27,8 +27,7 @@ export default function Form({createRoomCallback}) {
         <input type='text' placeholder='Username' value={username} onChange={(e) => handleUsernameChange(e.target.value)} />
         <input type='text' placeholder='Room ID' onChange={(e) => handleRoomChange(e.target.value)} />
         <div className='btn-container'>
-          <button onClick={handleCreateRoom}>CREATE</button>
-          <button>JOIN</button>
+          <button onClick={handleCreateRoom}>JOIN</button>
         </div>
       </div>
     </>

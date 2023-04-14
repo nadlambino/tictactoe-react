@@ -32,4 +32,5 @@ input {
 .btn-container {
   display: flex;
   gap: 7px;
+  justify-content: center;
 }
