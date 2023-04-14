@@ -130,14 +130,7 @@ export default function Board({socket, username}) {
 	};
 
   const handleResetClick = () => {
-    setCurrentPlayer(players.x);
-    setBoard(emptyBoard);
-    setWon(false)
-    setDraw(false)
-    setInGame(true)
-    setWinner(null)
-    role = null
-    
+    resetGame()
     socket.emit('reset')
   }
 
