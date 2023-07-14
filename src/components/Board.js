@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Announce from './Announce';
 import Tile from './Tile';
 import Player from './Player';
+import ServerMessage from './ServerMessage';
 
 const winningConditions = [
   [0, 1, 2],
@@ -22,13 +23,18 @@ const players = {
 const emptyBoard = Array(9).fill(null)
 let role = null
 
-export default function Board({socket, username}) {
+export default function Board({socket, username, room, message}) {
   const [currentPlayer, setCurrentPlayer] = useState(players.x)
   const [board, setBoard] = useState(emptyBoard)
   const [won, setWon] = useState(false)
   const [draw, setDraw] = useState(false)
   const [inGame, setInGame] = useState(true)
   const [winner, setWinner] = useState(null)
+  const [serverMessage, setServerMessage] = useState([message])
+
+  socket.on('player_disconnected', (user) => {
+    setServerMessage(state => state.push(`Player ${user} has disconnected to the game.`))
+  })
 
   useEffect(() => {
     checkWinningCombination()
@@ -188,6 +194,7 @@ export default function Board({socket, username}) {
         won={won}
         draw={draw}
       />
+      <ServerMessage messages={serverMessage} />
       <Player player={role} />
       <div className='board'>
         {

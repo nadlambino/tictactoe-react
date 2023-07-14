@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
 import './../styles/form.css'
+import ServerMessage from './ServerMessage'
 
-export default function Form({createRoomCallback}) {
+export default function Form({createRoomCallback, error}) {
   const [username, setUsername] = useState('')
   const [room, setRoom] = useState('')
 
@@ -24,6 +25,7 @@ export default function Form({createRoomCallback}) {
   return (
     <>
       <div className='form-container'>
+        <ServerMessage messages={[error]} />
         <input type='text' placeholder='Username' value={username} onChange={(e) => handleUsernameChange(e.target.value)} />
         <input type='text' placeholder='Room ID' onChange={(e) => handleRoomChange(e.target.value)} />
         <div className='btn-container'>
