@@ -27,7 +27,7 @@ export default function Announce(props) {
 	} else if (props.draw === true && props.won === false) {
 		return (
 			<div className={'alert ' + (props.draw === true ? 'show' : 'hide')}>
-				Game draw. Both NOOB!
+				Game draw. One more game!
 			</div>
 		);
 	} else {
