@@ -33,7 +33,8 @@ export default function Board({socket, username, room, message}) {
   const [serverMessage, setServerMessage] = useState([message])
 
   socket.on('player_disconnected', (user) => {
-    setServerMessage([`Player ${user} has disconnected to the game.`])
+    resetGame()
+    setServerMessage([`Player ${user} has disconnected. The game was resetted.`])
   })
 
   useEffect(() => {
