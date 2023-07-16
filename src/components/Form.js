@@ -31,6 +31,7 @@ export default function Form({createRoomCallback, error}) {
         <div className='btn-container'>
           <button onClick={handleCreateRoom}>JOIN</button>
         </div>
+        <ServerMessage messages={['The game server is currently running on a free tier server. Expect some downtime']} />
       </div>
     </>
   )
