@@ -190,12 +190,12 @@ export default function Board({socket, username, room, message}) {
 
   return (
     <>
+      <ServerMessage messages={serverMessage} />
       <Announce
         player={winner}
         won={won}
         draw={draw}
       />
-      <ServerMessage messages={serverMessage} />
       <Player player={role} />
       <div className='board'>
         {
