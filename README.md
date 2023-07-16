@@ -1,15 +1,10 @@
-# Tic Tac Toe App with React
-### Local Setup
-- Clone the project
-- Run `npm install`
-- Run `nmp start`
-
+## Tic Tac Toe App 
 ### Deployed version
 https://tictactoe-nadlambino.netlify.app/
 
-# Available Scripts
-### `npm start`
-Start the up on development server
+### About
+Create or join a room to play with other players online!
 
-### `npm run build`
-Build the project for deployment
+### Stacks
+- ReactJS
+- SocketIO
